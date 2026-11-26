@@ -78,6 +78,14 @@ public class AssemblyTable : Station
         result.toy = toySlot.toy;
         result.AttachTo(slotPoint);
 
+        // La "cabeza" que se asoma toma el color del juguete
+        Renderer toyRend = toySlot.GetComponent<Renderer>();
+        if (toyRend != null && result.transform.childCount > 0)
+        {
+            Renderer head = result.transform.GetChild(0).GetComponent<Renderer>();
+            if (head != null) head.sharedMaterial = toyRend.sharedMaterial;
+        }
+
         Destroy(toySlot.gameObject);
         Destroy(boxSlot.gameObject);
         toySlot = boxSlot = null;

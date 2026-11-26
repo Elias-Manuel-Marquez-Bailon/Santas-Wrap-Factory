@@ -40,7 +40,14 @@ public static class PrototypeSceneBuilder
         Material matGiftBase = GetMaterial("Mat_GiftBase",  "#FFFFFF");
 
         // --- Prefabs de items ---
+        Material matCar   = GetMaterial("Mat_ToyCar",   "#EF6C00");
+        Material matRobot = GetMaterial("Mat_ToyRobot", "#78909C");
+        Material matBall  = GetMaterial("Mat_ToyBall",  "#AB47BC");
+
         Item bear      = MakeItemPrefab("Item_Toy_Bear",   ItemType.Toy,   () => Sphere(matToy, 0.5f));
+        Item car       = MakeItemPrefab("Item_Toy_Car",    ItemType.Toy,   () => CarShape(matCar));
+        Item robot     = MakeItemPrefab("Item_Toy_Robot",  ItemType.Toy,   () => RobotShape(matRobot));
+        Item ball      = MakeItemPrefab("Item_Toy_Ball",   ItemType.Toy,   () => Sphere(matBall, 0.4f));
         Item box       = MakeItemPrefab("Item_Box",        ItemType.Box,   () => Cube(matCardboard, new Vector3(0.5f, 0.5f, 0.5f)));
         Item paperR    = MakeItemPrefab("Item_Paper_Red",  ItemType.Paper, () => Cube(matRed,   new Vector3(0.6f, 0.06f, 0.6f)));
         Item paperG    = MakeItemPrefab("Item_Paper_Green",ItemType.Paper, () => Cube(matGreen, new Vector3(0.6f, 0.06f, 0.6f)));
@@ -85,8 +92,13 @@ public static class PrototypeSceneBuilder
         // --- Estaciones ---
         var stations = new GameObject("Stations").transform;
 
+        // Juguetes junto a la pared oeste
+        BuildDispenser("Dispenser_Toy_Bear",  new Vector3(-7.2f, 0.5f,  2.5f), bear,  ItemType.Toy, matRed, stations, toy: ToyKind.Bear);
+        BuildDispenser("Dispenser_Toy_Car",   new Vector3(-7.2f, 0.5f,  1f),   car,   ItemType.Toy, matRed, stations, toy: ToyKind.Car);
+        BuildDispenser("Dispenser_Toy_Robot", new Vector3(-7.2f, 0.5f, -0.5f), robot, ItemType.Toy, matRed, stations, toy: ToyKind.Robot);
+        BuildDispenser("Dispenser_Toy_Ball",  new Vector3(-7.2f, 0.5f, -2f),   ball,  ItemType.Toy, matRed, stations, toy: ToyKind.Ball);
+
         // Fila de dispensadores junto a la pared norte
-        BuildDispenser("Dispenser_Bear",       -6.5f, bear,      ItemType.Toy,   matRed,   stations, toy: ToyKind.Bear);
         BuildDispenser("Dispenser_Box",        -5f,   box,       ItemType.Box,   matRed,   stations);
         BuildDispenser("Dispenser_Paper_Red",  -2f,   paperR,    ItemType.Paper, matWood,  stations, paper: PaperColor.Red);
         BuildDispenser("Dispenser_Paper_Green",-0.5f, paperG,    ItemType.Paper, matWood,  stations, paper: PaperColor.Green);
@@ -153,10 +165,15 @@ public static class PrototypeSceneBuilder
         player.AddComponent<PlayerInteraction>();
     }
 
+    // Versión corta: dispensador en la fila norte (z = 4)
     static void BuildDispenser(string name, float x, Item prefab, ItemType type, Material mat, Transform parent,
                                ToyKind toy = ToyKind.None, PaperColor paper = PaperColor.None, BowKind bow = BowKind.None)
+        => BuildDispenser(name, new Vector3(x, 0.5f, 4f), prefab, type, mat, parent, toy, paper, bow);
+
+    static void BuildDispenser(string name, Vector3 pos, Item prefab, ItemType type, Material mat, Transform parent,
+                               ToyKind toy = ToyKind.None, PaperColor paper = PaperColor.None, BowKind bow = BowKind.None)
     {
-        var go = CreateBox(name, new Vector3(x, 0.5f, 4f), new Vector3(1.2f, 1f, 1.2f), mat, parent);
+        var go = CreateBox(name, pos, new Vector3(1.2f, 1f, 1.2f), mat, parent);
         var d = go.AddComponent<Dispenser>();
         d.itemPrefab = prefab;
         d.type = type; d.toy = toy; d.paper = paper; d.bow = bow;
@@ -215,6 +232,30 @@ public static class PrototypeSceneBuilder
         go.transform.localScale = size;
         go.GetComponent<Renderer>().sharedMaterial = m;
         return go;
+    }
+
+    /// <summary>Carrito: cuerpo bajo + cabina.</summary>
+    static GameObject CarShape(Material m)
+    {
+        var root = Cube(m, new Vector3(0.6f, 0.25f, 0.35f));
+        var cabin = Cube(m, Vector3.one);
+        Object.DestroyImmediate(cabin.GetComponent<Collider>());
+        cabin.transform.SetParent(root.transform, false);
+        cabin.transform.localPosition = new Vector3(-0.1f, 0.9f, 0f);
+        cabin.transform.localScale = new Vector3(0.5f, 0.8f, 0.9f);
+        return root;
+    }
+
+    /// <summary>Robot: cuerpo + cabeza cuadrada.</summary>
+    static GameObject RobotShape(Material m)
+    {
+        var root = Cube(m, new Vector3(0.35f, 0.4f, 0.25f));
+        var head = Cube(m, Vector3.one);
+        Object.DestroyImmediate(head.GetComponent<Collider>());
+        head.transform.SetParent(root.transform, false);
+        head.transform.localPosition = new Vector3(0f, 0.85f, 0f);
+        head.transform.localScale = new Vector3(0.7f, 0.6f, 0.9f);
+        return root;
     }
 
     /// <summary>Moño: dos cubos achatados en cruz.</summary>
