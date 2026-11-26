@@ -175,3 +175,33 @@ Lee este archivo completo y haz lo siguiente, en orden, avisándome al terminar 
 4. Dime exactamente qué debo hacer en Unity para probarlo.
 
 Después seguimos con las estaciones y los pedidos.
+
+## 11. Estado actual (actualizado 2026-11-26)
+- Fase 1 y Fase 2 completas y probadas: estaciones, pedidos con tarjetas, puntaje, cronómetro, pausa, pantalla final, menú principal, 3 niveles (LevelData) y 4 juguetes (osito, carrito, robot, pelota) con primitivas.
+- UX: avisos en pantalla (correcto / no coincide / expirado), textos de ayuda sobre las estaciones, tarjetas con color de juguete y "Sin moño".
+- Para regenerar todo: `Tools/Santa/Build Full Game` (requiere TMP Essential Resources importado). Luego abrir `MainMenu` y Play.
+- Los prefabs de items existentes NO se sobrescriben al regenerar (para no pisar modelos reemplazados a mano). Para regenerar uno, borrarlo primero.
+
+## 12. Assets sugeridos (low poly, mismo estilo, preferible un solo pack/autor)
+Formato `.fbx` o `.glb`. Revisar licencia y anotar autor para los créditos.
+
+**Prioridad alta**
+| Asset | Uso | Notas |
+|---|---|---|
+| Elfo | Jugador | Ideal con animaciones caminar/idle |
+| Osito, carrito, robot, pelota | Juguetes | Tamaño ~30–50 cm |
+| Caja de regalo | Caja, caja con juguete, regalo terminado | Una sola caja; el color se pone por código |
+| Moño | Moño dorado/plateado | Uno solo; el color se cambia por código |
+| Costal de Santa | Entrega | |
+
+**Prioridad media (estaciones)**: mesa de trabajo de madera (ensamblado), máquina industrial (envolvedora), repisas/cajones/contenedores (dispensadores), rollo de papel (opcional).
+
+**Prioridad baja (ambiente)**: pinos, adornos, guirnaldas, chimenea, ventanas, montones de regalos, paredes/piso de madera.
+
+**Fuentes**: Kenney.nl (*Holiday Kit*, CC0), Quaternius (CC0), Poly Pizza, itch.io ("low poly christmas").
+
+## 13. Ideas de mecánicas para expandir (pendiente decidir)
+- **Fáciles**: mesas libres para dejar items, bote de basura, combo/multiplicador por entregas seguidas, selector de nivel con estrellas guardadas.
+- **Medianas**: banda transportadora (nivel 2), suelo de hielo (nivel 3), elfo travieso que roba items, pedido urgente de Santa (doble puntos, poco tiempo), máquina que se atasca (presionar E varias veces).
+- **Grandes**: segundo jugador local, juguetes con pasos extra (pintar carrito, pilas al robot), mapa que cambia a mitad del nivel.
+- **Recomendado primero**: mesas libres + bote de basura + banda transportadora + suelo de hielo.
