@@ -24,6 +24,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // No moverse en pausa o al terminar el nivel
+        if (GameManager.Instance != null && !GameManager.Instance.IsPlaying) return;
+
         Vector2 input = ReadInput();
 
         // Dirección relativa a la cámara (ignorando la inclinación)

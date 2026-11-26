@@ -1,8 +1,8 @@
 using UnityEngine;
 
 /// <summary>
-/// Costal de Santa: recibe regalos terminados y los destruye.
-/// En la Fase 2 validará contra el OrderManager y sumará puntos.
+/// Costal de Santa: recibe regalos terminados, los valida contra los pedidos
+/// activos (OrderManager) y los destruye. Si no coincide con ningún pedido, no cuenta.
 /// </summary>
 public class DeliveryBag : Station
 {
@@ -13,8 +13,10 @@ public class DeliveryBag : Station
         if (!player.IsHolding || !CanAccept(player.HeldItem)) return;
 
         Item gift = player.TakeItem();
-        // TODO Fase 2: OrderManager.TryDeliver(gift) y sumar/restar puntos
-        Debug.Log($"[Santa] Regalo entregado: {gift.toy} / papel {gift.paper} / moño {gift.bow}");
+        bool ok = OrderManager.Instance != null && OrderManager.Instance.TryDeliver(gift);
+        Debug.Log(ok
+            ? $"[Santa] ¡Pedido correcto! {gift.toy} / {gift.paper} / {gift.bow}"
+            : $"[Santa] El regalo no coincide con ningún pedido: {gift.toy} / {gift.paper} / {gift.bow}");
         Destroy(gift.gameObject);
     }
 }

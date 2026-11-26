@@ -27,6 +27,9 @@ public class PlayerInteraction : MonoBehaviour
         currentTarget = FindTarget();
         UpdateHighlight();
 
+        // No interactuar en pausa o al terminar el nivel
+        if (GameManager.Instance != null && !GameManager.Instance.IsPlaying) return;
+
         Keyboard kb = Keyboard.current;
         if (kb != null && (kb.eKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame))
             DoInteract();
