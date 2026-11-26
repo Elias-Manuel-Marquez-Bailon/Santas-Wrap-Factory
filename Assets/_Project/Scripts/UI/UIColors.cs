@@ -26,6 +26,40 @@ public static class UIColors
         }
     }
 
+    /// <summary>Mismos colores que los materiales de los juguetes.</summary>
+    public static Color Toy(ToyKind t)
+    {
+        switch (t)
+        {
+            case ToyKind.Bear:  return Hex("#795548");
+            case ToyKind.Car:   return Hex("#EF6C00");
+            case ToyKind.Robot: return Hex("#78909C");
+            case ToyKind.Ball:  return Hex("#AB47BC");
+            default:            return Color.gray;
+        }
+    }
+
+    public static string PaperName(PaperColor p)
+    {
+        switch (p)
+        {
+            case PaperColor.Red:   return "rojo";
+            case PaperColor.Green: return "verde";
+            case PaperColor.Blue:  return "azul";
+            default:               return "ninguno";
+        }
+    }
+
+    public static string BowName(BowKind b)
+    {
+        switch (b)
+        {
+            case BowKind.Gold:   return "moño dorado";
+            case BowKind.Silver: return "moño plateado";
+            default:             return "sin moño";
+        }
+    }
+
     public static string ToyName(ToyKind t)
     {
         switch (t)

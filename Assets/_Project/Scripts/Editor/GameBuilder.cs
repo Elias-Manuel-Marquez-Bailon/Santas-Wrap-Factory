@@ -141,6 +141,13 @@ public static class GameBuilder
         hud.scoreText = Txt(hudBg.transform, "ScoreText", "Puntos: 0", 30, UIColors.Hex("#F9A825"));
         Place(hud.scoreText.rectTransform, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0, 8), new Vector2(280, 38));
 
+        // --- Aviso en pantalla (correcto / no coincide / expirado) ---
+        var feedbackText = Txt(c, "FeedbackText", "", 64, Color.white);
+        Place(feedbackText.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0, 220), new Vector2(1200, 180));
+        feedbackText.fontStyle = FontStyles.Bold;
+        var feedback = canvas.gameObject.AddComponent<FeedbackUI>();
+        feedback.text = feedbackText;
+
         // --- Pausa ---
         var pauseUI = canvas.gameObject.AddComponent<PauseMenuUI>();
         var pausePanel = FullScreenPanel(c, "PausePanel");
@@ -190,8 +197,12 @@ public static class GameBuilder
         root.gameObject.AddComponent<Image>().color = CardColor;
         var card = root.gameObject.AddComponent<OrderCardUI>();
 
+        // Juguete: cuadrito de color + nombre
+        card.toySwatch = Img(root, "ToySwatch", Color.gray);
+        Place(card.toySwatch.rectTransform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1), new Vector2(12, -10), new Vector2(30, 30));
         card.toyText = Txt(root, "ToyText", "Osito", 30, TextDark);
-        Place(card.toyText.rectTransform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -6), new Vector2(210, 38));
+        Place(card.toyText.rectTransform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(0, 1), new Vector2(48, -6), new Vector2(165, 38));
+        card.toyText.alignment = TextAlignmentOptions.Left;
 
         // Papel
         var paperGroup = NewUI("PaperGroup", root);
@@ -203,13 +214,12 @@ public static class GameBuilder
 
         // Moño
         var bowGroup = NewUI("BowGroup", root);
-        Place(bowGroup, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(50, -8), new Vector2(90, 70));
-        card.bowGroup = bowGroup.gameObject;
+        Place(bowGroup, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(50, -8), new Vector2(100, 70));
         card.bowSwatch = Img(bowGroup, "Swatch", Color.yellow);
         Place(card.bowSwatch.rectTransform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0.5f, 0.5f), new Vector2(0, -24), new Vector2(34, 34));
         card.bowSwatch.rectTransform.localRotation = Quaternion.Euler(0, 0, 45);
-        var bl = Txt(bowGroup, "Label", "Moño", 16, TextDark);
-        Place(bl.rectTransform, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0.5f, 0), Vector2.zero, new Vector2(90, 20));
+        card.bowLabel = Txt(bowGroup, "Label", "Moño", 16, TextDark);
+        Place(card.bowLabel.rectTransform, new Vector2(0.5f, 0), new Vector2(0.5f, 0), new Vector2(0.5f, 0), Vector2.zero, new Vector2(100, 20));
 
         // Barra de tiempo
         var timeBg = Img(root, "TimeBg", UIColors.Hex("#5D4037"));

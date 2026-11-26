@@ -3,14 +3,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Tarjeta de un pedido: nombre del juguete, color de papel, moño y barra de tiempo.
+/// Tarjeta de un pedido: juguete (nombre + color), color de papel, moño (o "Sin moño") y barra de tiempo.
 /// </summary>
 public class OrderCardUI : MonoBehaviour
 {
     public TMP_Text toyText;
+    public Image toySwatch;         // color del juguete
     public Image paperSwatch;
     public Image bowSwatch;
-    public GameObject bowGroup;     // se oculta si el pedido no lleva moño
+    public TMP_Text bowLabel;       // "Moño" o "Sin moño"
     public RectTransform timeFill;  // barra que se encoge (anchorMax.x)
     public Image timeFillImage;
 
@@ -20,11 +21,13 @@ public class OrderCardUI : MonoBehaviour
     {
         Order = order;
         toyText.text = UIColors.ToyName(order.toy);
+        toySwatch.color = UIColors.Toy(order.toy);
         paperSwatch.color = UIColors.Paper(order.paper);
 
         bool hasBow = order.bow != BowKind.None;
-        bowGroup.SetActive(hasBow);
+        bowSwatch.gameObject.SetActive(hasBow);
         if (hasBow) bowSwatch.color = UIColors.Bow(order.bow);
+        bowLabel.text = hasBow ? (order.bow == BowKind.Gold ? "Moño dorado" : "Moño plateado") : "Sin moño";
     }
 
     void Update()

@@ -66,6 +66,22 @@ public class WrappingMachine : Station
         }
     }
 
+    protected override string GetHint()
+    {
+        if (result != null) return "<color=#2E7D32>¡Listo!</color>\nE para recoger";
+        if (working) return "Envolviendo...";
+        if (boxSlot == null && paperSlot == null && bowSlot == null)
+            return "Envolvedora\nCaja con juguete + Papel (+ Moño)";
+
+        if (boxSlot != null && paperSlot != null) // solo falta decidir el moño
+            return "Agrega moño, o\n<color=#C62828>E con manos vacías = sin moño</color>";
+
+        string falta = "";
+        if (boxSlot == null) falta += "caja con juguete";
+        if (paperSlot == null) falta += (falta.Length > 0 ? ", " : "") + "papel";
+        return "Falta: " + falta;
+    }
+
     void StartWork()
     {
         working = true;

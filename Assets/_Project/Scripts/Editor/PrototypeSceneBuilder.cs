@@ -44,7 +44,9 @@ public static class PrototypeSceneBuilder
         Material matRobot = GetMaterial("Mat_ToyRobot", "#78909C");
         Material matBall  = GetMaterial("Mat_ToyBall",  "#AB47BC");
 
-        Item bear      = MakeItemPrefab("Item_Toy_Bear",   ItemType.Toy,   () => Sphere(matToy, 0.5f));
+        Material matBear  = GetMaterial("Mat_ToyBearBrown", "#795548");
+
+        Item bear      = MakeItemPrefab("Item_Toy_Bear",   ItemType.Toy,   () => BearShape(matBear));
         Item car       = MakeItemPrefab("Item_Toy_Car",    ItemType.Toy,   () => CarShape(matCar));
         Item robot     = MakeItemPrefab("Item_Toy_Robot",  ItemType.Toy,   () => RobotShape(matRobot));
         Item ball      = MakeItemPrefab("Item_Toy_Ball",   ItemType.Toy,   () => Sphere(matBall, 0.4f));
@@ -112,6 +114,7 @@ public static class PrototypeSceneBuilder
         at.resultPrefab = boxToy;
         at.slotPoint = CreateSlot(table.transform);
         at.progressBar = CreateProgressBar(table.transform, matBarBg, matBarFill);
+        at.hintText = CreateHint(table.transform);
 
         // Máquina envolvedora
         var wrapper = CreateBox("WrappingMachine", new Vector3(1.5f, 0.6f, 0f), new Vector3(2f, 1.2f, 1.4f), matMetal, stations);
@@ -119,6 +122,7 @@ public static class PrototypeSceneBuilder
         wm.giftPrefab = gift;
         wm.slotPoint = CreateSlot(wrapper.transform);
         wm.progressBar = CreateProgressBar(wrapper.transform, matBarBg, matBarFill);
+        wm.hintText = CreateHint(wrapper.transform);
         wm.paperMaterials = new[] { matRed, matGreen, matBlue };
         wm.bowMaterials = new[] { matGold, matSilver };
 
@@ -129,7 +133,7 @@ public static class PrototypeSceneBuilder
         bag.transform.position = new Vector3(6.5f, 0.6f, -3f);
         bag.transform.localScale = new Vector3(1.4f, 0.6f, 1.4f);
         bag.GetComponent<Renderer>().sharedMaterial = matSack;
-        bag.AddComponent<DeliveryBag>();
+        bag.AddComponent<DeliveryBag>().hintText = CreateHint(bag.transform);
 
         // --- Guardar escena y agregarla a Build Settings ---
         EditorSceneManager.SaveScene(scene, ScenePath);
@@ -216,7 +220,38 @@ public static class PrototypeSceneBuilder
         return bar;
     }
 
+    /// <summary>Texto 3D flotante de ayuda encima de una estación (hijo del grupo sin escala).</summary>
+    static TMPro.TMP_Text CreateHint(Transform station)
+    {
+        var go = new GameObject("Hint_" + station.name);
+        go.transform.SetParent(station.parent, false);
+        go.transform.position = station.position + Vector3.up * (station.localScale.y * 0.5f + 2.1f);
+        var t = go.AddComponent<TMPro.TextMeshPro>();
+        t.fontSize = 3.2f;
+        t.fontStyle = TMPro.FontStyles.Bold;
+        t.alignment = TMPro.TextAlignmentOptions.Center;
+        t.color = HexColor("#212121");
+        t.rectTransform.sizeDelta = new Vector2(5f, 1.5f);
+        t.text = "";
+        return t;
+    }
+
     // ---------- formas de items ----------
+
+    /// <summary>Osito: cabeza redonda con dos orejitas.</summary>
+    static GameObject BearShape(Material m)
+    {
+        var root = Sphere(m, 0.45f);
+        for (int i = -1; i <= 1; i += 2)
+        {
+            var ear = Sphere(m, 1f);
+            Object.DestroyImmediate(ear.GetComponent<Collider>());
+            ear.transform.SetParent(root.transform, false);
+            ear.transform.localPosition = new Vector3(0.35f * i, 0.4f, 0f);
+            ear.transform.localScale = Vector3.one * 0.38f;
+        }
+        return root;
+    }
 
     static GameObject Sphere(Material m, float size)
     {

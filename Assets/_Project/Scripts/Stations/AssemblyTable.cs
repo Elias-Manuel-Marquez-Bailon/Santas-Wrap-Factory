@@ -51,6 +51,14 @@ public class AssemblyTable : Station
         }
     }
 
+    protected override string GetHint()
+    {
+        if (result != null) return "<color=#2E7D32>¡Listo!</color>\nE para recoger";
+        if (working) return "Ensamblando...";
+        if (toySlot == null && boxSlot == null) return "Mesa de ensamblado\nJuguete + Caja";
+        return toySlot == null ? "Falta: juguete" : "Falta: caja";
+    }
+
     void StartWork()
     {
         working = true;

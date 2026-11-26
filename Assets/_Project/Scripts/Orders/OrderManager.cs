@@ -59,6 +59,7 @@ public class OrderManager : MonoBehaviour
             if (o.timeLeft <= 0f)
             {
                 ScoreManager.Instance?.Add(expirePenalty);
+                FeedbackUI.Instance?.Show($"¡Pedido expirado! {expirePenalty}", new Color(1f, 0.35f, 0.3f));
                 RemoveOrder(o);
             }
         }
@@ -85,17 +86,18 @@ public class OrderManager : MonoBehaviour
 
     /// <summary>
     /// Intenta entregar un regalo. Si coincide con un pedido activo (el más urgente),
-    /// suma puntos y lo quita. Devuelve true si fue correcto.
+    /// suma puntos y lo quita. Devuelve true si fue correcto y los puntos ganados en "points".
     /// </summary>
-    public bool TryDeliver(Item gift)
+    public bool TryDeliver(Item gift, out int points)
     {
+        points = 0;
         Order best = null;
         foreach (Order o in activeOrders)
             if (o.Matches(gift) && (best == null || o.timeLeft < best.timeLeft)) best = o;
 
         if (best == null) return false;
 
-        int points = pointsPerDelivery + Mathf.RoundToInt(maxSpeedBonus * best.TimePercent);
+        points = pointsPerDelivery + Mathf.RoundToInt(maxSpeedBonus * best.TimePercent);
         ScoreManager.Instance?.Add(points);
         RemoveOrder(best);
         return true;
