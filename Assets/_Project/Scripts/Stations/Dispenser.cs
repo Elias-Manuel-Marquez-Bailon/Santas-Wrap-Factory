@@ -4,7 +4,7 @@ using UnityEngine;
 /// Dispensador: si el jugador tiene las manos vacías, le da un item nuevo.
 /// Se configura con un prefab y los atributos que tendrá el item creado.
 /// </summary>
-public class Dispenser : MonoBehaviour, IInteractable
+public class Dispenser : Station
 {
     [Tooltip("Prefab del item que entrega (debe tener el componente Item)")]
     public Item itemPrefab;
@@ -15,7 +15,7 @@ public class Dispenser : MonoBehaviour, IInteractable
     public PaperColor paper = PaperColor.None;
     public BowKind bow = BowKind.None;
 
-    public void Interact(PlayerCarry player)
+    public override void Interact(PlayerCarry player)
     {
         if (player.IsHolding || itemPrefab == null) return;
 

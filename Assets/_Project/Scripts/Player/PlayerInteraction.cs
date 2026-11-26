@@ -14,7 +14,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private PlayerCarry carry;
     private Transform highlight;      // marcador visual
-    private Component currentTarget;  // estación (IInteractable) o Item
+    private Component currentTarget;  // Station o Item
 
     void Awake()
     {
@@ -34,7 +34,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void DoInteract()
     {
-        if (currentTarget is IInteractable station)
+        if (currentTarget is Station station)
             station.Interact(carry);           // la estación decide qué hacer
         else if (currentTarget is Item item)
             carry.PickUp(item);                // recoger item del piso
@@ -55,7 +55,7 @@ public class PlayerInteraction : MonoBehaviour
         foreach (Collider c in hits)
         {
             // Estación
-            var station = c.GetComponentInParent<IInteractable>() as Component;
+            Station station = c.GetComponentInParent<Station>();
             if (station != null)
             {
                 float d = Vector3.Distance(center, c.ClosestPoint(center));
